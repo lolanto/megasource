@@ -3,7 +3,7 @@
 #include "config_backends.h"
 
 #ifndef AL_NO_UID_DEFS
-
+#define HAVE_GUIDDEF_H
 #if defined(HAVE_GUIDDEF_H)
 #define INITGUID
 #include <windows.h>

@@ -101,7 +101,7 @@ include(GNUInstallDirs)
 find_package(PkgConfig)
 find_package(SDL3 QUIET)
 
-option(ALSOFT_DLOPEN  "Check for the dlopen API for loading optional libs"  ON)
+option(ALSOFT_DLOPEN  "Check for the dlopen API for loading optional libs"  OFF)
 
 option(ALSOFT_WERROR  "Treat compile warnings as errors"      OFF)
 
@@ -236,18 +236,18 @@ if(NOT HAVE_STDC_FORMAT_MACROS)
 endif()
 
 # Some systems may need libatomic for atomic functions to work
-set(OLD_REQUIRED_LIBRARIES ${CMAKE_REQUIRED_LIBRARIES})
-set(CMAKE_REQUIRED_LIBRARIES ${OLD_REQUIRED_LIBRARIES} atomic)
-check_cxx_source_compiles("#include <atomic>
-std::atomic<int> foo{0};
-int main() { return foo.fetch_add(2); }"
-HAVE_LIBATOMIC)
-if(NOT HAVE_LIBATOMIC)
-    set(CMAKE_REQUIRED_LIBRARIES "${OLD_REQUIRED_LIBRARIES}")
-else()
-    set(EXTRA_LIBS atomic ${EXTRA_LIBS})
-endif()
-unset(OLD_REQUIRED_LIBRARIES)
+# set(OLD_REQUIRED_LIBRARIES ${CMAKE_REQUIRED_LIBRARIES})
+# set(CMAKE_REQUIRED_LIBRARIES ${OLD_REQUIRED_LIBRARIES} atomic)
+# check_cxx_source_compiles("#include <atomic>
+# std::atomic<int> foo{0};
+# int main() { return foo.fetch_add(2); }"
+# HAVE_LIBATOMIC)
+# if(NOT HAVE_LIBATOMIC)
+#     set(CMAKE_REQUIRED_LIBRARIES "${OLD_REQUIRED_LIBRARIES}")
+# else()
+#     set(EXTRA_LIBS atomic ${EXTRA_LIBS})
+# endif()
+# unset(OLD_REQUIRED_LIBRARIES)
 
 if(ANDROID)
     # Include liblog for Android logging
@@ -265,10 +265,10 @@ if(MSVC)
     # until the update becomes more widespread, this helps avoid some pain
     # points.
     set(CPP_DEFS ${CPP_DEFS} _CRT_SECURE_NO_WARNINGS _DISABLE_CONSTEXPR_MUTEX_CONSTRUCTOR)
-    check_cxx_compiler_flag(/permissive- HAVE_PERMISSIVE_SWITCH)
-    if(HAVE_PERMISSIVE_SWITCH)
-        set(C_FLAGS ${C_FLAGS} $<$<COMPILE_LANGUAGE:CXX>:/permissive->)
-    endif()
+    # check_cxx_compiler_flag(/permissive- HAVE_PERMISSIVE_SWITCH)
+    # if(HAVE_PERMISSIVE_SWITCH)
+    #     set(C_FLAGS ${C_FLAGS} $<$<COMPILE_LANGUAGE:CXX>:/permissive->)
+    # endif()
     set(C_FLAGS ${C_FLAGS} /W4 /w14640 /wd4065 /wd4127 /wd4268 /wd4324 /wd5030 /wd5051
         $<$<COMPILE_LANGUAGE:CXX>:/EHsc> /utf-8)
 
@@ -409,11 +409,11 @@ if(NOT MSVC)
     unset(OLD_REQUIRED_FLAGS)
 endif()
 
-check_include_file(xmmintrin.h HAVE_XMMINTRIN_H)
-check_include_file(emmintrin.h HAVE_EMMINTRIN_H)
-check_include_file(pmmintrin.h HAVE_PMMINTRIN_H)
-check_include_file(smmintrin.h HAVE_SMMINTRIN_H)
-check_include_file(arm_neon.h HAVE_ARM_NEON_H)
+# check_include_file(xmmintrin.h HAVE_XMMINTRIN_H)
+# check_include_file(emmintrin.h HAVE_EMMINTRIN_H)
+# check_include_file(pmmintrin.h HAVE_PMMINTRIN_H)
+# check_include_file(smmintrin.h HAVE_SMMINTRIN_H)
+# check_include_file(arm_neon.h HAVE_ARM_NEON_H)
 
 set(HAVE_SSE        0)
 set(HAVE_SSE2       0)
@@ -461,17 +461,17 @@ endif()
 # Check for ARM Neon support
 option(ALSOFT_CPUEXT_NEON "Enable ARM NEON support" ON)
 option(ALSOFT_REQUIRE_NEON "Require ARM NEON support" OFF)
-if(ALSOFT_CPUEXT_NEON AND HAVE_ARM_NEON_H)
-    check_c_source_compiles("#include <arm_neon.h>
-        int main()
-        {
-            int32x4_t ret4 = vdupq_n_s32(0);
-            return vgetq_lane_s32(ret4, 0);
-        }" HAVE_NEON_INTRINSICS)
-    if(HAVE_NEON_INTRINSICS)
-        set(HAVE_NEON 1)
-    endif()
-endif()
+# if(ALSOFT_CPUEXT_NEON AND HAVE_ARM_NEON_H)
+#     check_c_source_compiles("#include <arm_neon.h>
+#         int main()
+#         {
+#             int32x4_t ret4 = vdupq_n_s32(0);
+#             return vgetq_lane_s32(ret4, 0);
+#         }" HAVE_NEON_INTRINSICS)
+#     if(HAVE_NEON_INTRINSICS)
+#         set(HAVE_NEON 1)
+#     endif()
+# endif()
 if(ALSOFT_REQUIRE_NEON AND NOT HAVE_NEON)
     message(FATAL_ERROR "Failed to enable required ARM NEON CPU extensions")
 endif()
@@ -520,8 +520,8 @@ if(HAVE_SSE2)
 endif()
 
 
-check_include_file(cpuid.h HAVE_CPUID_H)
-check_include_file(intrin.h HAVE_INTRIN_H)
+# check_include_file(cpuid.h HAVE_CPUID_H)
+# check_include_file(intrin.h HAVE_INTRIN_H)
 check_include_file(guiddef.h HAVE_GUIDDEF_H)
 
 # Some systems need libm for some math functions to work
@@ -535,10 +535,10 @@ endif()
 # Some systems need to link with -lrt for clock_gettime as used by the common
 # eaxmple functions.
 set(RT_LIB )
-check_library_exists(rt clock_gettime "" HAVE_LIBRT)
-if(HAVE_LIBRT)
-    set(RT_LIB rt)
-endif()
+# check_library_exists(rt clock_gettime "" HAVE_LIBRT)
+# if(HAVE_LIBRT)
+#     set(RT_LIB rt)
+# endif()
 
 # Check for the dlopen API (for dynamically loading backend libs)
 if(ALSOFT_DLOPEN)
@@ -551,14 +551,14 @@ if(ALSOFT_DLOPEN)
 endif()
 
 # Check for a cpuid intrinsic
-if(HAVE_CPUID_H)
-    check_c_source_compiles("#include <cpuid.h>
-        int main()
-        {
-            unsigned int eax, ebx, ecx, edx;
-            return __get_cpuid(0, &eax, &ebx, &ecx, &edx);
-        }" HAVE_GCC_GET_CPUID)
-endif()
+# if(HAVE_CPUID_H)
+#     check_c_source_compiles("#include <cpuid.h>
+#         int main()
+#         {
+#             unsigned int eax, ebx, ecx, edx;
+#             return __get_cpuid(0, &eax, &ebx, &ecx, &edx);
+#         }" HAVE_GCC_GET_CPUID)
+# endif()
 if(HAVE_INTRIN_H)
     check_c_source_compiles("#include <intrin.h>
         int main()
@@ -569,7 +569,7 @@ if(HAVE_INTRIN_H)
         }" HAVE_CPUID_INTRINSIC)
 endif()
 
-check_symbol_exists(proc_pidpath     libproc.h HAVE_PROC_PIDPATH)
+# check_symbol_exists(proc_pidpath     libproc.h HAVE_PROC_PIDPATH)
 
 if(NOT WIN32)
     # We need pthreads outside of Windows, for semaphores. It's also used to

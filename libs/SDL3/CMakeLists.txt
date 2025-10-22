@@ -315,7 +315,7 @@ dep_option(SDL_SSE2                "Use SSE2 assembly routines" ON "SDL_ASSEMBLY
 dep_option(SDL_SSE3                "Use SSE3 assembly routines" ON "SDL_ASSEMBLY;SDL_CPU_X86 OR SDL_CPU_X64" OFF)
 dep_option(SDL_SSE4_1              "Use SSE4.1 assembly routines" ON "SDL_ASSEMBLY;SDL_CPU_X86 OR SDL_CPU_X64" OFF)
 dep_option(SDL_SSE4_2              "Use SSE4.2 assembly routines" ON "SDL_ASSEMBLY;SDL_CPU_X86 OR SDL_CPU_X64" OFF)
-dep_option(SDL_MMX                 "Use MMX assembly routines" ON "SDL_ASSEMBLY;SDL_CPU_X86 OR SDL_CPU_X64" OFF)
+dep_option(SDL_MMX                 "Use MMX assembly routines" OFF "SDL_ASSEMBLY;SDL_CPU_X86 OR SDL_CPU_X64" OFF)
 dep_option(SDL_ALTIVEC             "Use Altivec assembly routines" ON "SDL_ASSEMBLY;SDL_CPU_POWERPC32 OR SDL_CPU_POWERPC64" OFF)
 dep_option(SDL_ARMNEON             "Use NEON assembly routines" ON "SDL_ASSEMBLY;SDL_CPU_ARM32 OR SDL_CPU_ARM64" OFF)
 dep_option(SDL_LSX                 "Use LSX assembly routines" ON "SDL_ASSEMBLY;SDL_CPU_LOONGARCH64" OFF)
@@ -1989,12 +1989,12 @@ elseif(WINDOWS)
     static __x_ABI_CWindows_CGaming_CInput_CIGamepadStatics2 *s2;
     int main(int argc, char **argv) { return 0; }" HAVE_WINDOWS_GAMING_INPUT_H
   )
-  check_c_source_compiles("
-    #include <stdbool.h>
-    #define COBJMACROS
-    #include <gameinput.h>
-    int main(int argc, char **argv) { return 0; }" HAVE_GAMEINPUT_H
-  )
+  # check_c_source_compiles("
+  #   #include <stdbool.h>
+  #   #define COBJMACROS
+  #   #include <gameinput.h>
+  #   int main(int argc, char **argv) { return 0; }" HAVE_GAMEINPUT_H
+  # )
   check_include_file(dxgi1_6.h HAVE_DXGI1_6_H)
   check_include_file(tpcshrd.h HAVE_TPCSHRD_H)
   check_include_file(roapi.h HAVE_ROAPI_H)
@@ -2157,10 +2157,10 @@ elseif(WINDOWS)
     if(HAVE_WINDOWS_GAMING_INPUT_H)
       set(SDL_JOYSTICK_WGI 1)
     endif()
-    if(HAVE_GAMEINPUT_H)
-      sdl_glob_sources("${SDL3_SOURCE_DIR}/src/joystick/gdk/*.cpp")
-      set(SDL_JOYSTICK_GAMEINPUT 1)
-    endif()
+    # if(HAVE_GAMEINPUT_H)
+    #   sdl_glob_sources("${SDL3_SOURCE_DIR}/src/joystick/gdk/*.cpp")
+    #   set(SDL_JOYSTICK_GAMEINPUT 1)
+    # endif()
     set(HAVE_SDL_JOYSTICK TRUE)
 
     if(SDL_HAPTIC)

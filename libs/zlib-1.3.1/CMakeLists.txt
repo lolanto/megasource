@@ -13,7 +13,7 @@ set(INSTALL_INC_DIR "${CMAKE_INSTALL_PREFIX}/include" CACHE PATH "Installation d
 set(INSTALL_MAN_DIR "${CMAKE_INSTALL_PREFIX}/share/man" CACHE PATH "Installation directory for manual pages")
 set(INSTALL_PKGCONFIG_DIR "${CMAKE_INSTALL_PREFIX}/share/pkgconfig" CACHE PATH "Installation directory for pkgconfig (.pc) files")
 
-include(CheckTypeSize)
+# include(CheckTypeSize)
 include(CheckFunctionExists)
 include(CheckIncludeFile)
 include(CheckCSourceCompiles)
@@ -39,24 +39,24 @@ endif()
 if(HAVE_STDDEF_H)
     list(APPEND CMAKE_REQUIRED_DEFINITIONS -DHAVE_STDDEF_H)
 endif()
-check_type_size(off64_t OFF64_T)
-if(HAVE_OFF64_T)
-   add_definitions(-D_LARGEFILE64_SOURCE=1)
-endif()
+# check_type_size(off64_t OFF64_T)
+# if(HAVE_OFF64_T)
+#    add_definitions(-D_LARGEFILE64_SOURCE=1)
+# endif()
 set(CMAKE_REQUIRED_DEFINITIONS) # clear variable
 
 #
 # Check for fseeko
 #
-check_function_exists(fseeko HAVE_FSEEKO)
-if(NOT HAVE_FSEEKO)
-    add_definitions(-DNO_FSEEKO)
-endif()
+# check_function_exists(fseeko HAVE_FSEEKO)
+# if(NOT HAVE_FSEEKO)
+#     add_definitions(-DNO_FSEEKO)
+# endif()
 
 #
 # Check for unistd.h
 #
-check_include_file(unistd.h Z_HAVE_UNISTD_H)
+# check_include_file(unistd.h Z_HAVE_UNISTD_H)
 
 if(MSVC)
     set(CMAKE_DEBUG_POSTFIX "d")
